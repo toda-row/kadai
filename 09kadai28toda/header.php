@@ -2,7 +2,7 @@
 
 session_start();
 
-<!-- Head[Start] -->
+
 <header>
   <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -18,12 +18,17 @@ session_start();
             <a class="navbar-brand" href="login.php">ログイン</a>
         <?php } else { ?>
             <a class="navbar-brand" href="logout.php">ログアウト</a>
+            <a class="navbar-brand" href="logout.php">
+               <?php
+                echo 'ようこそ ', $_SESSION['name'], ' さん';
+                ?>
+            </a>
         <?php } ?>
         </div>
     </div>
   </nav>
 </header>
-<!-- Head[End] -->
+
 
 
 ?>

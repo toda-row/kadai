@@ -1,13 +1,14 @@
 <?php
+session_start();
 
-$id = $_GET["id"];
 
 //2. DB接続します
-try { //エラー入ったときに
-  $pdo = new PDO('mysql:dbname=gs_db28;charset=utf8;host=localhost','root','');
-} catch (PDOException $e) { //受信します
-  exit('DbConnectError:'.$e->getMessage()); //エラー表示
-}
+include("functions.php");
+//1.POSTでParamを取得
+$id = $_GET["id"];
+
+//2.DB接続など
+$pdo = db_con();
 
 
 //３．データ登録SQL変更
@@ -33,7 +34,7 @@ if($status==false){
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>データ登録</title>
+  <title>書籍詳細編集</title>
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <style>div{padding: 10px;font-size:16px;}</style>
 </head>
@@ -47,12 +48,13 @@ if($status==false){
         <a class="navbar-brand" href="index.php">トップ</a>
         <a class="navbar-brand" href="selectuser.php">ユーザーの一覧</a>
         <a class="navbar-brand" href="selectbook.php">書籍の一覧</a>
-        <a class="navbar-brand" href="registration.php">新規ユーザー登録</a>
+
         <?php
             if(
                 !isset($_SESSION["chk_ssid"]) || $_SESSION["chk_ssid"]!=session_id()
             ) {
         ?>
+            <a class="navbar-brand" href="registration.php">新規ユーザー登録</a>
             <a class="navbar-brand" href="login.php">ログイン</a>
         <?php } else { ?>
             <a class="navbar-brand" href="logout.php">ログアウト</a>
@@ -63,7 +65,7 @@ if($status==false){
 <!-- Head[End] -->
 
 <!-- Main[Start] -->
-<form method="post" action="updatebook.php">
+<form method="post" action="updatebook.php" enctype="multipart/form-data">
  <input type="hidden" name="id" value="<?=$id?>">
   <div class="container jumbotron">
    <fieldset>
@@ -72,6 +74,9 @@ if($status==false){
      <label>書籍URL：<input type="text" name="bookurl" value="<?=$row["bookurl"]?>"></label><br>
      <label><textArea name="comment" rows="4" cols="40"><?=$row["comment"]?></textArea></label><br>
      <label>投稿日時：<input type="text" name="date" value="<?=$row["date"]?>"></label><br>
+     <img src="<?=$row["img"]?>" width="100">
+     
+     <input type="file" name="filename"><br>
      <input type="submit" value="送信">
     </fieldset>
   </div>

@@ -1,10 +1,14 @@
 <?php
+
+session_start();
+
+
 //1.  DB接続します
-try {
-  $pdo = new PDO('mysql:dbname=gs_db28;charset=utf8;host=localhost','root','');
-} catch (PDOException $e) {
-  exit('データベースに接続できませんでした。'.$e->getMessage());
-}
+include("functions.php");
+//1.POSTでParamを取得
+
+//2.DB接続など
+$pdo = db_con();
 
 //２．データ登録SQL作成
 $stmt = $pdo->prepare("SELECT * FROM gs_user_table");

@@ -1,14 +1,21 @@
 <?php
+
+session_start();
+$hensu = $_SESSION["anything"];
+
 //1.  DB接続します
-try {
-  $pdo = new PDO('mysql:dbname=gs_db28;charset=utf8;host=localhost','root','');
-} catch (PDOException $e) {
-  exit('データベースに接続できませんでした。'.$e->getMessage());
-}
+include("functions.php");
+//1.POSTでParamを取得
+
+//2.DB接続など
+$pdo = db_con();
 
 //２．データ登録SQL作成
-$stmt = $pdo->prepare("SELECT * FROM gs_bm_table");
-
+$sql = "SELECT *
+          FROM gs_bm_table
+         WHERE userid = :userid";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(':userid', $hensu);
 //baintvalue で検索
 
 $status = $stmt->execute();
@@ -25,6 +32,7 @@ if($status==false){
   while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
 
     $view .='<p>';//.=は追加処理＋＝と一緒
+    $view .= '<img src="'.$result["img"].'" width="100">';
     $view .='<a href="bookdetail.php?id='.$result["id"].'">';
     $view .= ' '; 
     $view .= $result["id"];
@@ -86,13 +94,14 @@ if($status==false){
 <!-- Head[End] -->
 
 <!-- Main[Start] -->
-<form method="post" action="insertbook.php">
+<form method="post" action="insertbook.php" enctype="multipart/form-data">
   <div class="container jumbotron">
    <fieldset>
     <legend>本をブックマークする</legend>
      <label>書籍名：<input type="text" name="bookname"></label><br>
      <label>書籍URL：<input type="text" name="bookurl"></label><br>
      <label><textArea name="comment" rows="4" cols="40"></textArea></label><br>
+     <input type="file" name="filename"><br>
      <input type="submit" value="送信">
     </fieldset>
   </div>

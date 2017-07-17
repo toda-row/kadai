@@ -1,14 +1,13 @@
 <?php
 
-$id = $_GET["id"];
 
 //2. DB接続します
-try { //エラー入ったときに
-  $pdo = new PDO('mysql:dbname=gs_db28;charset=utf8;host=localhost','root','');
-} catch (PDOException $e) { //受信します
-  exit('DbConnectError:'.$e->getMessage()); //エラー表示
-}
+include("functions.php");
+//1.POSTでParamを取得
+$id = $_GET["id"];
 
+//2.DB接続など
+$pdo = db_con();
 
 //３．データ登録SQL変更
 $stmt = $pdo->prepare("SELECT * FROM gs_bm_table WHERE id=:id");
@@ -63,7 +62,9 @@ if($status==false){
      <label>書籍名：<input type="text" name="bookname" value="<?=$row["bookname"]?>"></label><br>
      <label>書籍URL：<input type="text" name="bookurl" value="<?=$row["bookurl"]?>"></label><br>
      <label><textArea name="comment" rows="4" cols="40"><?=$row["comment"]?></textArea></label><br>
+     <img src="<?=$row["img"]?>" width="100"><br>
      <label>投稿日時：<input type="text" name="date" value="<?=$row["date"]?>"></label><br>
+
     </fieldset>
   </div>
 </form>

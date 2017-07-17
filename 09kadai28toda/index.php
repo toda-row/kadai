@@ -2,11 +2,11 @@
 session_start();
 
 //1.  DB接続します
-try {
-  $pdo = new PDO('mysql:dbname=gs_db28;charset=utf8;host=localhost','root','');
-} catch (PDOException $e) {
-  exit('データベースに接続できませんでした。'.$e->getMessage());
-}
+include("functions.php");
+//1.POSTでParamを取得
+
+//2.DB接続など
+$pdo = db_con();
 
 //２．データ登録SQL作成
 $stmt = $pdo->prepare("SELECT * FROM gs_bm_table");
@@ -27,6 +27,7 @@ if($status==false){
   while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
 
     $view .='<p>';//.=は追加処理＋＝と一緒
+    $view .= '<img src="'.$result["img"].'" width="100">';
     $view .='<a href="opendetail.php?id='.$result["id"].'">';
     $view .= ' '; 
     $view .= $result["id"];
@@ -38,6 +39,8 @@ if($status==false){
     $view .= $result["comment"];
     $view .= ' ';
     $view .= $result["date"];
+    $view .= ' ';
+    $view .= $result["userid"];
     $view .='</a>';
 
     $view .='</p>';
@@ -61,6 +64,9 @@ if($status==false){
 
 
 <!-- Head[Start] -->
+
+<!-- Head[End] -->
+
 <header>
   <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -68,7 +74,6 @@ if($status==false){
         <a class="navbar-brand" href="index.php">トップ</a>
         <a class="navbar-brand" href="selectuser.php">ユーザーの一覧</a>
         <a class="navbar-brand" href="selectbook.php">書籍の一覧</a>
-        <a class="navbar-brand" href="registration.php">新規ユーザー登録</a>
         <?php
             if(
                 !isset($_SESSION["chk_ssid"]) || $_SESSION["chk_ssid"]!=session_id()
@@ -77,14 +82,16 @@ if($status==false){
             <a class="navbar-brand" href="login.php">ログイン</a>
         <?php } else { ?>
             <a class="navbar-brand" href="logout.php">ログアウト</a>
+            <a class="navbar-brand" href="logout.php">
+               <?php
+                echo 'ようこそ ', $_SESSION['name'], ' さん';
+                ?>
+            </a>
         <?php } ?>
         </div>
     </div>
   </nav>
 </header>
-<!-- Head[End] -->
-
-
 
 
 <!-- Main[Start] -->

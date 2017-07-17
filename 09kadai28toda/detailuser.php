@@ -1,13 +1,14 @@
 <?php
+session_start();
 
-$id = $_GET["id"];
 
 //2. DB接続します
-try { //エラー入ったときに
-  $pdo = new PDO('mysql:dbname=gs_db28;charset=utf8;host=localhost','root','');
-} catch (PDOException $e) { //受信します
-  exit('DbConnectError:'.$e->getMessage()); //エラー表示
-}
+include("functions.php");
+//1.POSTでParamを取得
+$id = $_GET["id"];
+
+//2.DB接続など
+$pdo = db_con();
 
 
 //３．データ登録SQL変更
